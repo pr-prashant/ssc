@@ -7,10 +7,12 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import common.money.MonetaryAmount;
 import common.money.Percentage;
+import org.springframework.stereotype.Repository;
 
 /**
  * Loads accounts from a data source using the JDBC API.
@@ -22,6 +24,7 @@ import common.money.Percentage;
  * Decide if you should use field level or setter injection. 
  */
 
+@Repository
 public class JdbcAccountRepository implements AccountRepository {
 
 	private DataSource dataSource;
@@ -31,6 +34,7 @@ public class JdbcAccountRepository implements AccountRepository {
 	 * @param dataSource the data source
 	 */
 
+	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
