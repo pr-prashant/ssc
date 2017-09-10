@@ -3,13 +3,21 @@ package rewards;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import config.RewardsConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import common.money.MonetaryAmount;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * A system test that verifies the components of the RewardNetwork application
@@ -60,35 +68,40 @@ import common.money.MonetaryAmount;
 
 /* TODO 08: Bonus question: see the 'Optional Step' inside the Detailed Instructions.
  */
-
+@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration
+@ContextConfiguration(classes = TestInfrastructureConfig.class)
+//@ActiveProfiles({"jdbc","jdbc-dev"})
+@ActiveProfiles({"jdbc","jdbc-production"})
 public class RewardNetworkTests {
 
 	
 	/**
 	 * The object being tested.
 	 */
+	@Autowired
 	private RewardNetwork rewardNetwork;
 
 	/**
 	 * Need this to enable clean shutdown at the end of the application
 	 */
-	private ConfigurableApplicationContext context;
+//	private ConfigurableApplicationContext context;
 
-	@Before
-	public void setUp() {
+//	@Before
+	/*public void setUp() {
 		// Create the test configuration for the application from one file
 		context = SpringApplication.run(TestInfrastructureConfig.class);
 		// Get the bean to use to invoke the application
 		rewardNetwork = context.getBean(RewardNetwork.class);
-	}
+	}*/
 
-	@After
+	/*@After
 	public void tearDown() throws Exception {
 		// simulate the Spring bean destruction lifecycle:
 		if (context != null)
 			context.close();
 	}
-
+*/
 	@Test
 	public void testRewardForDining() {
 		// create a new dining of 100.00 charged to credit card
@@ -125,4 +138,21 @@ public class RewardNetworkTests {
 		assertEquals(MonetaryAmount.valueOf("4.00"), contribution
 				.getDistribution("Corgan").getAmount());
 	}
+/*
+	Following is for bonus question.
+
+	@Configuration
+	@Import({
+			TestInfrastructureDevConfig.class,
+			TestInfrastructureProductionConfig.class,
+			RewardsConfig.class })
+	static class TestInfrastructureConfig {
+
+		public LoggingBeanPostProcessor loggingBean(){
+			return new LoggingBeanPostProcessor();
+		}
+	}
+*/
+
 }
+
