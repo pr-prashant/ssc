@@ -1,5 +1,6 @@
 package rewards.internal.restaurant;
 
+import org.springframework.data.repository.Repository;
 
 /**
  * Loads restaurant aggregates. Called by the reward network to find and reconstitute Restaurant entities from an
@@ -10,6 +11,12 @@ package rewards.internal.restaurant;
 
 //	TODO-05: Alter this interface to extend a Spring Data Interface.
 //	Define a method that will look up a Restaurant by a provided merchant number.
-public interface RestaurantRepository {
+public interface RestaurantRepository extends Repository<Restaurant,Long> {
 
+	/**
+	 * Load a Restaurant entity by its merchant number.
+	 * @param merchantNumber the merchant number
+	 * @return the restaurant
+	 */
+	public Restaurant findByNumber(String merchantNumber);
 }

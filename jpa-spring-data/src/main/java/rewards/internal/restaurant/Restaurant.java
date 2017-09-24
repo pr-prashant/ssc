@@ -22,14 +22,21 @@ import common.money.Percentage;
  */
 // TODO-03:  Map this class using JPA Annotations.  See schema.sql file
 // for guidance on table and column names.
+@Entity
+@Table(name = "T_RESTAURANT")
 public class Restaurant {
 
+	@Id
+	@Column(name = "id")
 	private Long entityId;
 
+	@Column(name = "MERCHANT_NUMBER")
 	private String number;
 
+    // No need for @Column, mapped automatically to NAME
 	private String name;
 
+	@AttributeOverride(name="value",column=@Column(name="BENEFIT_PERCENTAGE"))
 	private Percentage benefitPercentage;
 
 
