@@ -25,6 +25,16 @@ public class AccountControllerTests {
 		controller = new AccountController(new StubAccountManager());
 	}
 
+	@Test
+	public void testHandleDetailsRequest() {
+		ExtendedModelMap model = new ExtendedModelMap();
+		String viewName = controller.accountDetails(0, model);
+		Account account = (Account) model.get("account");
+		assertEquals("accountDetails", viewName);
+		assertNotNull(account);
+		assertEquals(Long.valueOf(0), account.getEntityId());
+	}
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testHandleListRequest() {
@@ -32,27 +42,9 @@ public class AccountControllerTests {
 		String viewName = controller.accountList(model);
 
 		List<Account> accounts = (List<Account>) model.get("accounts");
+		assertEquals("accountList", viewName);
 		assertNotNull(accounts);
 		assertEquals(1, accounts.size());
 		assertEquals(Long.valueOf(0), accounts.get(0).getEntityId());
-
-		// TODO-04: Change this to expect a logical view name
-		// Re-run the test and make sure it passes
-		//
-		assertEquals("/WEB-INF/views/accountList.jsp", viewName);
 	}
-
-	// TODO-05: Restart the server. You should still be able to see the
-	// list of accounts on the home page.
-
-	// TODO-07: Add a test for the accountDetails() method of AccountController.
-	// Use the test method above for hints. Supply 0 for the ID value to
-	// retrieve.
-	// Create assertions for model contents and view name.
-	// When complete run the test. It should pass.
-
-
-	// TODO-08: Restart the server. You should now be able to click
-	// any of the account links and reach their details page.
-
 }

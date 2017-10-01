@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import rewards.internal.account.Account;
 import rewards.internal.account.Beneficiary;
@@ -41,26 +42,23 @@ public class AccountController {
 	 * Provide a model with a list of all accounts for the account List page.
 	 * </p>
 	 * 
-	 * @param model
-	 *            the "implicit" model created by Spring MVC
+	 * @param id the id of the account
+	 * @param model the "implicit" model created by Spring MVC
+	 */
+	@RequestMapping("/accountDetails")
+	public String accountDetails(@RequestParam("entityId") long id, Model model) {
+		model.addAttribute("account", accountManager.getAccount(id));
+		return "accountDetails";
+	}
+
+	/**
+	 * <p>Provide a model with a list of all accounts for the account List page.</p>
+	 *
+	 * @param model the "implicit" model created by Spring MVC
 	 */
 	@RequestMapping("/accountList")
 	public String accountList(Model model) {
 		model.addAttribute("accounts", accountManager.getAllAccounts());
-
-		// TODO-03: Refactor this to return just the logical view name
-		return "/WEB-INF/views/accountList.jsp";
+		return "accountList";
 	}
-
-	// TODO-06: Implement the /accountDetails request handling method.
-	// 1. Use a method parameter to obtain the request parameter needed to
-	// retrieve an account.
-	// 2. Use another method parameter to gain access to the Model.
-	// 3. Use the accountManager to obtain an account. Place this on the model.
-	// - the attribute key should correspond to the key used in the JSP file
-	// (see src/main/webapp/WEB-INF/views/accountDetails.jsp).
-	// 4. Finally tell Spring to forward to accountDetails.jsp by returning the
-	// correct logical view name.
-	// 5. Save all work
-
 }

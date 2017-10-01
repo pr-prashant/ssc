@@ -22,12 +22,9 @@ import config.MvcConfig;
 import config.RootConfig;
 
 /**
- * TODO-09: EXTRA CREDIT Mock MVC Testing
- * <p>
- * Spring's Mock MVC Framework allows you to drive an MVC application in a test
- * as if it was running in a container so far more checks are possible than
- * using the simple {@link AccountControllerTests}. The tests have mostly been
- * written for you, follow the TO DO steps to see how it works.
+ * Tests using Spring's MockMVC framework. This drives an MVC application in a
+ * test, as if it was running in a container, so far more checks are possible
+ * than with the simple {@link AccountControllerTests}.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -48,10 +45,6 @@ public class MockMvcTests {
 	}
 
 	/**
-	 * TODO-10: EXTRA CREDIT. Read the Javadoc to see how this test works, Then
-	 * try running the tests. The getAccountTest() test should fail since you
-	 * have just implemented it, but the test still assumes a 404 is returned.
-	 * <p>
 	 * Test a GET to /accountList (note the URL is relative to the servlet
 	 * context - hence /accountList instead of /mvc/accounts/accountList). We
 	 * tell the request that we will accept HTML then run the request by calling
@@ -98,16 +91,10 @@ public class MockMvcTests {
 				.perform(get("/accountDetails") //
 						.param("entityId", "0") //
 						.accept(MediaType.parseMediaType("text/html;charset=UTF-8")))
-				// TODO-11: EXTRA CREDIT Fix this methid
-				// 1. Modify the line below - the URL is now valid so we no
-				// longer get a 404.
-				// 2. Add 3 more andExpect() methods similar to the
-				// getAccountsTest() method above. Check that:
-				// 2a. The model contains 1 attribute
-				// 2b. That the attribute has the correct name
-				// 2c. That we are being forwarded to the right JSP
-				// 3. Rerun the tests until they all pass.
-				.andExpect(status().isNotFound());
+				.andExpect(status().isOk()) //
+				.andExpect(model().size(1)) //
+				.andExpect(model().attributeExists("account")) //
+				.andExpect(forwardedUrl("/WEB-INF/views/accountDetails.jsp"));
 	}
 
 }
