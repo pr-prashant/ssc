@@ -3,12 +3,15 @@ package accounts.web;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import config.RootConfig;
+import config.AppConfig;
+import config.DbConfig;
 
 @Configuration
 @ComponentScan("accounts.web")
-@Import(RootConfig.class)
+@Import({AppConfig.class,DbConfig.class})
+@EnableTransactionManagement
 public class TestConfig {
 
 }

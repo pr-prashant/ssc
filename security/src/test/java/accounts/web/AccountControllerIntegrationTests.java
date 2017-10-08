@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,6 +21,7 @@ import accounts.internal.JpaAccountManager;
  * profile.
  */
 @Transactional
+@ComponentScan("accounts.web")
 @ActiveProfiles("jpa")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -34,7 +36,7 @@ public class AccountControllerIntegrationTests extends
 	@Before
 	public void setUp() {
 		// The number of test accounts in the database
-		// - a static variable so we only do this once.
+		// - a static variable so we only do this one.
 		if (numAccountsInDb == -1)
 			numAccountsInDb = new JdbcTemplate(dataSource).queryForObject(
 					"SELECT count(*) FROM T_Account", Integer.class);
