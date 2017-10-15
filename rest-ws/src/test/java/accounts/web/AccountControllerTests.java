@@ -5,8 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -15,6 +15,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import accounts.internal.StubAccountManager;
 import rewards.internal.account.Account;
+import rewards.internal.account.Beneficiary;
 
 /**
  * A JUnit test case testing the AccountController. 
@@ -42,33 +43,15 @@ public class AccountControllerTests {
 		assertEquals(1, accounts.size());
 		assertEquals(Long.valueOf(0), accounts.get(0).getEntityId());
 	}
-	
-	// TODO 19 (BONUS): Testing with a Mock HTTP request.
-	// (1) Remove the @Ignore annotation and run these tests.
-	// testCreateAccount() will fail with an IllegalStateException: "Could not
-	// find current request via RequestContextHolder". This is because
-	// ServletUriComponentsBuilder doesn't have an HTTP request to initialize
-	// itself from.
-	//
-    // (2) To run this test successfully, we need to mock up a request.
-	// Uncomment the setupFakeRequest() method call. Rerun the tests and they
-	// should all pass.
-    //
-	// (3) Examine the Javadoc and comments in setupFakeRequest() to see how
-	// it works.
-	//
-	// Spring's "org.springframework.mock.web" package contains many
-	// other useful classes for testing Controllers like MockHttpSession
-	// and MockHttpSrvletResponse.
+
 	@Test
-	@Ignore
 	public void testCreateAccount() {
 		Account newAccount = new Account("11223344", "Test");
 
 		// ServletUriComponentsBuilder expects to find the HttpRequest in the
 		// current thread (Spring MVC does this for you). For our test, we need
 		// to add a mock request manually
-		//setupFakeRequest("http://localhost/accounts");
+		setupFakeRequest("http://localhost/accounts");
 
 		HttpEntity<?> result = controller.createAccount(newAccount);
 		assertNotNull(result);
@@ -77,6 +60,41 @@ public class AccountControllerTests {
 		assertEquals("http://localhost/accounts/3", result.getHeaders().getLocation().toString());
 	}
 	
+	@Test
+	public void testGetBeneficiary() {
+		Beneficiary beneficiary = controller.getBeneficiary(0, "Corgan");
+		assertNotNull(beneficiary);
+		assertEquals(Long.valueOf(1), beneficiary.getEntityId());
+	}
+
+	@Test
+	public void testAddBeneficiary() {
+
+		// ServletUriComponentsBuilder expects to find the HttpRequest in the
+		// current thread (Spring MVC does this for you). For our test, we need
+		// to add a mock request manually
+		setupFakeRequest("http://localhost/accounts/0/beneficiaries");
+
+		HttpEntity<?> result = controller.addBeneficiary(0L, "Test2");
+		assertNotNull(result);
+		assertEquals("http://localhost/accounts/0/beneficiaries/Test2", result.getHeaders().getLocation().toString());
+	}
+
+	@Test
+	public void testDeleteBeneficiary() {
+		controller.removeBeneficiary(0L, "Corgan");
+	}
+
+	@Test
+	public void testDeleteBeneficiaryFail() {
+		try {
+			controller.removeBeneficiary(0L, "Fred");
+			Assert.fail("No such beneficiary 'Fred', " + "IllegalArgumentException expected");
+		} catch (IllegalArgumentException e) {
+			// Expected result
+		}
+	}
+
 	/**
 	 * Add a mocked up HttpServletRequest to Spring's internal request-context
 	 * holder. Normally the DispatcherServlet does this, but we must do it
